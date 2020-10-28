@@ -1,11 +1,8 @@
 package com.brunopapait.osworks.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +14,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brunopapait.osworks.domain.model.Cliente;
 import com.brunopapait.osworks.domain.repository.ClienteRepository;
+import com.brunopapait.osworks.domain.service.ClienteService;
 
 @RestController
 public class ClienteController {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 
 	@GetMapping("/clientes")
 	public List<Cliente> listar() {
@@ -47,17 +47,17 @@ public class ClienteController {
 
 	@PostMapping("/clientes")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+	public Cliente adicionar(@Valid @RequestBody Cliente cliente) throws Exception {
+		return clienteService.salvar(cliente);
 	}
 
 	@PutMapping("/clientes/{id}")
-	public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long id, @RequestBody Cliente cliente) {
+	public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long id, @RequestBody Cliente cliente) throws Exception {
 		if (!clienteRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
 		cliente.setId(id);
-		cliente = clienteRepository.save(cliente);
+		cliente = clienteService.salvar(cliente);
 		return ResponseEntity.ok(cliente);
 	}
 
@@ -67,7 +67,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteRepository.deleteById(id);
+		clienteService.excluir(id);;
 		
 		return ResponseEntity.noContent().build();
 	}

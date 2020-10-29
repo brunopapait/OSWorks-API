@@ -8,6 +8,7 @@ import com.brunopapait.osworks.domain.model.StatusOrdemServico;
 public class OrdemServicoModel {
 	private Long id;
 	private String nomeCliente;
+	private ClienteResumoModel cliente;
 	private String descricao;
 	private BigDecimal preco;
 	private StatusOrdemServico status;
@@ -118,6 +119,20 @@ public class OrdemServicoModel {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
+	}
+
+	/**
+	 * @return the cliente
+	 */
+	public ClienteResumoModel getCliente() {
+		return cliente;
+	}
+
+	/**
+	 * @param cliente the cliente to set
+	 */
+	public void setCliente(ClienteResumoModel cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override
